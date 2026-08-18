@@ -17,16 +17,25 @@ const templateOrder = [
   'Classic Green',
 ]
 
+function fieldValue(section, id) {
+  const f = (section || []).find((x) => x.id === id)
+  return f ? String(f.value || '').trim() : ''
+}
+
 export default function DesignPage() {
   const router = useRouter()
-  const { data, update, hydrated } = useBiodata()
+  const { data, setTemplate, hydrated } = useBiodata()
 
   const selected = data.template && templates[data.template] ? data.template : 'Royal Maroon'
 
   const summary = useMemo(() => {
-    const bits = [data.fullName, data.profession, data.height].filter(Boolean)
+    const bits = [
+      fieldValue(data.personal, 'fullName'),
+      fieldValue(data.personal, 'profession'),
+      fieldValue(data.personal, 'height'),
+    ].filter(Boolean)
     return bits.join(' · ') || 'Your details will appear here'
-  }, [data.fullName, data.profession, data.height])
+  }, [data.personal])
 
   if (!hydrated) {
     return (
@@ -79,7 +88,7 @@ export default function DesignPage() {
                     <button
                       key={name}
                       type="button"
-                      onClick={() => update({ template: name })}
+                      onClick={() => setTemplate(name)}
                       className={`text-left rounded-xl border p-3 transition ${
                         isActive
                           ? 'border-primary ring-2 ring-primary/20 bg-card'

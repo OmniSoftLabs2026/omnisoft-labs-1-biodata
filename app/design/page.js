@@ -10,11 +10,8 @@ import BiodataPreview, { templates } from '@/components/biodata-preview'
 import { ArrowLeft, ArrowRight, Check, Eye } from 'lucide-react'
 
 const templateOrder = [
-  'Royal Maroon',
-  'Elegant Gold',
-  'Modern Navy',
-  'Rose Premium',
-  'Classic Green',
+  'Ivory Cream', 'Warm Taupe', 'Royal Gold', 'Deep Burgundy',
+  'Forest Green', 'Sage Garden', 'Terracotta', 'Peach Blush',
 ]
 
 function fieldValue(section, id) {
@@ -26,7 +23,7 @@ export default function DesignPage() {
   const router = useRouter()
   const { data, setTemplate, hydrated } = useBiodata()
 
-  const selected = data.template && templates[data.template] ? data.template : 'Royal Maroon'
+  const selected = data.template && templates[data.template] ? data.template : 'Ivory Cream'
 
   const summary = useMemo(() => {
     const bits = [
@@ -77,10 +74,10 @@ export default function DesignPage() {
             {/* Templates picker */}
             <aside className="space-y-3 lg:sticky lg:top-24 self-start">
               <p className="text-xs uppercase tracking-widest text-muted-foreground px-1">
-                5 Premium Designs
+                8 Premium Designs
               </p>
 
-              <div className="grid grid-cols-2 lg:grid-cols-1 gap-3">
+              <div className="grid grid-cols-2 lg:grid-cols-1 gap-3 max-h-[70vh] lg:overflow-y-auto lg:pr-2">
                 {templateOrder.map((name) => {
                   const t = templates[name]
                   const isActive = selected === name

@@ -6,7 +6,7 @@ import { ArrowRight, PencilLine, LayoutTemplate, Download } from 'lucide-react'
 
 const templates = [
   {
-    name: 'Royal Maroon',
+    name: 'Ivory Cream',
     sample: {
       name: 'Aarav Sharma',
       role: 'Software Engineer',
@@ -19,7 +19,7 @@ const templates = [
     },
   },
   {
-    name: 'Elegant Gold',
+    name: 'Warm Taupe',
     sample: {
       name: 'Ananya Verma',
       role: 'Chartered Accountant',
@@ -32,7 +32,7 @@ const templates = [
     },
   },
   {
-    name: 'Modern Navy',
+    name: 'Royal Gold',
     sample: {
       name: 'Rohan Mehta',
       role: 'Product Manager',
@@ -45,7 +45,7 @@ const templates = [
     },
   },
   {
-    name: 'Rose Premium',
+    name: 'Deep Burgundy',
     sample: {
       name: 'Isha Patel',
       role: 'Interior Designer',
@@ -58,7 +58,7 @@ const templates = [
     },
   },
   {
-    name: 'Classic Green',
+    name: 'Forest Green',
     sample: {
       name: 'Kunal Nair',
       role: 'Doctor (MD)',
@@ -68,6 +68,45 @@ const templates = [
       religion: 'Hindu · Nair',
       education: 'MBBS, MD Medicine',
       family: 'Nuclear · Kochi',
+    },
+  },
+  {
+    name: 'Sage Garden',
+    sample: {
+      name: 'Priya Iyer',
+      role: 'UX Researcher',
+      age: '25 yrs',
+      city: 'Chennai',
+      height: "5'3\"",
+      religion: 'Hindu · Iyer',
+      education: 'M.Des, IIT Guwahati',
+      family: 'Nuclear · Chennai',
+    },
+  },
+  {
+    name: 'Terracotta',
+    sample: {
+      name: 'Arjun Reddy',
+      role: 'Civil Engineer',
+      age: '31 yrs',
+      city: 'Hyderabad',
+      height: "5'11\"",
+      religion: 'Hindu · Reddy',
+      education: 'B.Tech, NIT Warangal',
+      family: 'Joint · Hyderabad',
+    },
+  },
+  {
+    name: 'Peach Blush',
+    sample: {
+      name: 'Meera Joshi',
+      role: 'Data Scientist',
+      age: '26 yrs',
+      city: 'Pune',
+      height: "5'6\"",
+      religion: 'Hindu · Maratha',
+      education: 'M.Sc, IISc Bangalore',
+      family: 'Nuclear · Pune',
     },
   },
 ]
@@ -83,7 +122,7 @@ const steps = [
     icon: LayoutTemplate,
     n: '02',
     title: 'Choose Your Design',
-    desc: 'Pick from five refined templates that suit your style.',
+    desc: 'Pick from eight refined templates that suit your style.',
   },
   {
     icon: Download,
@@ -133,14 +172,14 @@ export default function HomePage() {
           <div className="text-center max-w-2xl mx-auto">
             <p className="text-xs uppercase tracking-widest text-muted-foreground">Templates</p>
             <h2 className="mt-3 font-serif text-3xl md:text-4xl leading-tight">
-              Choose From 5 Premium Designs
+              Choose From 8 Premium Designs
             </h2>
             <p className="mt-4 text-muted-foreground leading-relaxed">
               Every template is thoughtfully typeset — clean, dignified, and print-ready.
             </p>
           </div>
 
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {templates.map((t) => (
               <TemplateCard key={t.name} name={t.name} sample={t.sample} />
             ))}

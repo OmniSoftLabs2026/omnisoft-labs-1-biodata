@@ -4,42 +4,61 @@
    Palette metadata for the design picker swatches.
 ----------------------------------------------------------------*/
 export const templates = {
-  'Royal Maroon': { bg: '#f8efdd', accent: '#7a1f2b', border: '#c19a3e', monogram: '\u2766' },
-  'Elegant Gold': { bg: '#fbf7ee', accent: '#a9812f', border: '#c9a24b', monogram: '\u2726' },
-  'Modern Navy': { bg: '#ffffff', accent: '#1e3a6b', border: '#cbd5e1', monogram: '\u25c6' },
-  'Rose Premium': { bg: '#fdf2f4', accent: '#7d1f3a', border: '#c08497', monogram: '\u2741' },
-  'Classic Green': { bg: '#f7f3e6', accent: '#1f4d2e', border: '#c2a24a', monogram: '\u273f' },
+  'Ivory Cream':    { bg: '#FAF8F5', accent: '#5B1E31', border: '#5B1E31', monogram: '\u2766' },
+  'Warm Taupe':     { bg: '#9A8C80', accent: '#FFFFFF', border: '#D4AF37', monogram: '\u2726' },
+  'Royal Gold':     { bg: '#D4AF37', accent: '#1A1005', border: '#5B1E31', monogram: '\u2736' },
+  'Deep Burgundy':  { bg: '#5B1E31', accent: '#D4AF37', border: '#D4AF37', monogram: '\u2741' },
+  'Forest Green':   { bg: '#1C3B2B', accent: '#D4AF37', border: '#D4AF37', monogram: '\u273F' },
+  'Sage Garden':    { bg: '#9CAF88', accent: '#0D1A0D', border: '#1C3B2B', monogram: '\u2740' },
+  'Terracotta':     { bg: '#C86D51', accent: '#FFFFFF', border: '#FFF5E6', monogram: '\u2739' },
+  'Peach Blush':    { bg: '#DCAE96', accent: '#3A1208', border: '#5B1E31', monogram: '\u2767' },
 }
 
-const templateOrder = ['Royal Maroon', 'Elegant Gold', 'Modern Navy', 'Rose Premium', 'Classic Green']
+const templateOrder = [
+  'Ivory Cream', 'Warm Taupe', 'Royal Gold', 'Deep Burgundy',
+  'Forest Green', 'Sage Garden', 'Terracotta', 'Peach Blush',
+]
 export { templateOrder }
 
 /* ---------------------------------------------------------------
    Per-design styling. The LAYOUT is identical for every design
    (title "BIO DATA" + "Label : Value" rows). Only colours, fonts,
-   borders and section-heading treatment differ. Adding a new design
-   is just a new entry here — the strict format is preserved.
+   borders and section-heading treatment differ.
 ----------------------------------------------------------------*/
 const DESIGNS = {
-  'Royal Maroon': {
-    bg: '#f8efdd', ink: '#3a2a22', heading: '#7a1f2b', rule: '#c19a3e',
-    font: 'font-serif', frame: 'double', frameColor: '#c19a3e', headingStyle: 'underline',
+  'Ivory Cream': {
+    bg: '#FAF8F5', ink: '#1A1412', heading: '#5B1E31', rule: '#5B1E31',
+    font: 'font-serif', frame: 'double', frameColor: '#5B1E31', headingStyle: 'underline',
   },
-  'Elegant Gold': {
-    bg: '#fbf7ee', ink: '#4a3b28', heading: '#a9812f', rule: '#c9a24b',
-    font: 'font-serif', frame: 'none', headingStyle: 'plain',
+  'Warm Taupe': {
+    bg: '#9A8C80', ink: '#FFFFFF', heading: '#FFF8E7', rule: '#D4AF37',
+    font: 'font-serif', frame: 'none', headingStyle: 'bar', barBg: '#6B5F55', barText: '#FFF8E7',
   },
-  'Modern Navy': {
-    bg: '#ffffff', ink: '#243244', heading: '#1e3a6b', rule: '#cbd5e1',
+  'Royal Gold': {
+    bg: '#D4AF37', ink: '#1A1005', heading: '#3A2205', rule: '#5B1E31',
+    font: 'font-serif', frame: 'double', frameColor: '#5B1E31', headingStyle: 'underline',
+  },
+  'Deep Burgundy': {
+    bg: '#5B1E31', ink: '#FFF5E6', heading: '#D4AF37', rule: '#D4AF37',
+    font: 'font-serif', frame: 'double', frameColor: '#D4AF37', headingStyle: 'underline',
+    flourish: true,
+  },
+  'Forest Green': {
+    bg: '#1C3B2B', ink: '#F5F0DC', heading: '#D4AF37', rule: '#D4AF37',
+    font: 'font-serif', frame: 'double', frameColor: '#D4AF37', headingStyle: 'underline',
+    flourish: true,
+  },
+  'Sage Garden': {
+    bg: '#9CAF88', ink: '#0D1A0D', heading: '#1C3B2B', rule: '#1C3B2B',
     font: 'font-sans', frame: 'none', headingStyle: 'separator',
   },
-  'Rose Premium': {
-    bg: '#fdf2f4', ink: '#4a2530', heading: '#7d1f3a', rule: '#c08497',
-    font: 'font-serif', frame: 'none', headingStyle: 'underline', flourish: true,
+  'Terracotta': {
+    bg: '#C86D51', ink: '#FFFFFF', heading: '#FFF5E6', rule: '#FFF5E6',
+    font: 'font-serif', frame: 'none', headingStyle: 'bar', barBg: '#A04D35', barText: '#FFFFFF',
   },
-  'Classic Green': {
-    bg: '#f7f3e6', ink: '#22301f', heading: '#1f4d2e', rule: '#c2a24a',
-    font: 'font-serif', frame: 'double', frameColor: '#c2a24a', headingStyle: 'bar',
+  'Peach Blush': {
+    bg: '#DCAE96', ink: '#2A1008', heading: '#5B1E31', rule: '#5B1E31',
+    font: 'font-serif', frame: 'none', headingStyle: 'underline',
   },
 }
 
@@ -119,7 +138,7 @@ function Rows({ items, color }) {
           className="grid grid-cols-[minmax(120px,180px)_12px_1fr] gap-x-2 text-[13px] leading-snug"
           style={{ color }}
         >
-          <span className="font-medium">{it.label}</span>
+          <span className="font-semibold">{it.label}</span>
           <span>:</span>
           <span>{it.value}</span>
         </div>
@@ -134,18 +153,18 @@ function SectionBlock({ d, title, items, about }) {
     <div>
       {isBar ? (
         <div
-          className="px-3 py-1.5 text-[12px] font-semibold uppercase tracking-[0.24em]"
-          style={{ color: '#fff', background: d.heading }}
+          className="px-3 py-1.5 text-[12px] font-bold uppercase tracking-[0.24em]"
+          style={{ color: d.barText || '#fff', background: d.barBg || d.heading }}
         >
           {title}
         </div>
       ) : (
         <>
-          <h2 className="text-[13px] font-semibold uppercase tracking-[0.24em]" style={{ color: d.heading }}>
+          <h2 className="text-[13px] font-bold uppercase tracking-[0.24em]" style={{ color: d.heading }}>
             {title}
           </h2>
           {d.headingStyle === 'underline' && (
-            <div className="mt-1 h-px w-full" style={{ background: d.rule, opacity: 0.6 }} />
+            <div className="mt-1 h-[1.5px] w-full" style={{ background: d.rule, opacity: 0.7 }} />
           )}
         </>
       )}
@@ -161,7 +180,7 @@ function SectionBlock({ d, title, items, about }) {
       </div>
 
       {d.headingStyle === 'separator' && (
-        <div className="mt-4 h-px w-full" style={{ background: d.rule }} />
+        <div className="mt-4 h-[1.5px] w-full" style={{ background: d.rule, opacity: 0.7 }} />
       )}
     </div>
   )
@@ -170,7 +189,7 @@ function SectionBlock({ d, title, items, about }) {
 function Frame({ d, children }) {
   if (d.frame === 'double') {
     return (
-      <div className="m-3 h-full" style={{ border: `1px solid ${d.frameColor}` }}>
+      <div className="m-3 h-full" style={{ border: `2px solid ${d.frameColor}` }}>
         <div className="m-1.5 h-full" style={{ border: `1px solid ${d.frameColor}` }}>
           {children}
         </div>
@@ -183,15 +202,15 @@ function Frame({ d, children }) {
 /* ---------------------------------------------------------------
    Public component — one layout, styled per design.
 ----------------------------------------------------------------*/
-export default function BiodataPreview({ data, design = 'Royal Maroon' }) {
+export default function BiodataPreview({ data, design = 'Ivory Cream' }) {
   const v = buildView(data)
-  const d = DESIGNS[design] || DESIGNS['Royal Maroon']
+  const d = DESIGNS[design] || DESIGNS['Ivory Cream']
 
   return (
     <Page style={{ background: d.bg, color: d.ink }} className={d.font}>
       <Frame d={d}>
         <div className="p-8 sm:p-10">
-          <h1 className="text-3xl font-semibold uppercase tracking-[0.2em]" style={{ color: d.heading }}>
+          <h1 className="text-3xl font-bold uppercase tracking-[0.2em]" style={{ color: d.heading }}>
             Bio Data
           </h1>
           {d.flourish && <Flourish color={d.rule} />}

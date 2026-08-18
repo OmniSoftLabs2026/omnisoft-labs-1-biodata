@@ -97,12 +97,11 @@ function buildView(data) {
   const contact = data.contact || []
 
   return {
-    about: getVal(contact, 'aboutMe'),
-    sections: [
-      { title: 'Personal Details', items: rows(personal, []) },
-      { title: 'Family Details', items: rows(family, []) },
-      { title: 'Contact Details', items: rows(contact, ['aboutMe']) },
-    ].filter((s) => s.items.length > 0),
+    allRows: [
+      ...rows(personal, []),
+      ...rows(family, []),
+      ...rows(contact, ['aboutMe']),
+    ],
   }
 }
 
@@ -210,16 +209,14 @@ export default function BiodataPreview({ data, design = 'Ivory Cream' }) {
     <Page style={{ background: d.bg, color: d.ink }} className={d.font}>
       <Frame d={d}>
         <div className="p-8 sm:p-10">
-          <h1 className="text-3xl font-bold uppercase tracking-[0.2em]" style={{ color: d.heading }}>
-            Bio Data
+          <h1 className="text-3xl font-bold uppercase tracking-[0.2em] text-center" style={{ color: d.heading }}>
+            Biodata
           </h1>
           {d.flourish && <Flourish color={d.rule} />}
+          {!d.flourish && <div className="mt-2 mx-auto h-[1.5px] w-24" style={{ background: d.rule, opacity: 0.6 }} />}
 
-          <div className="mt-7 space-y-7">
-            {v.sections.map((s) => (
-              <SectionBlock key={s.title} d={d} title={s.title} items={s.items} />
-            ))}
-            {v.about && <SectionBlock d={d} title="About Me" about={v.about} />}
+          <div className="mt-7">
+            <Rows items={v.allRows} color={d.ink} />
           </div>
         </div>
       </Frame>

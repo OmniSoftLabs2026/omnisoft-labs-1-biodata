@@ -25,6 +25,8 @@ import {
   Phone,
   Sparkles,
   CheckCircle2,
+  Plus,
+  Trash2,
 } from 'lucide-react'
 
 /* ---------- small building blocks ---------- */
@@ -34,7 +36,9 @@ function FieldLabel({ htmlFor, children, required, optional }) {
     <Label htmlFor={htmlFor} className="text-sm text-foreground flex items-center gap-1.5">
       {children}
       {required && <span className="text-destructive">*</span>}
-      {optional && <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Optional</span>}
+      {optional && (
+        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Optional</span>
+      )}
     </Label>
   )
 }
@@ -54,10 +58,144 @@ function Section({ icon: Icon, step, title, description, children }) {
           )}
         </div>
       </div>
-      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-5">
-        {children}
-      </div>
+      <div className="mt-6 space-y-5">{children}</div>
     </section>
+  )
+}
+
+/* ---------- custom fields UI ---------- */
+
+function CustomFieldsBlock({ items, onChange, sectionLabel }) {
+  const [adding, setAdding] = useState(false)
+  const [label, setLabel] = useState('')
+  const [value, setValue] = useState('')
+
+  const addField = () => {
+    const trimmed = label.trim()
+    if (!trimmed) {
+      toast.error('Please enter a field name.')
+      return
+    }
+    const next = [
+      ...items,
+      { id: `cf_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`, label: trimmed, value: value.trim() },
+    ]
+    onChange(next)
+    setLabel('')
+    setValue('')
+    setAdding(false)
+    toast.success('Custom field added.')
+  }
+
+  const removeField = (id) => {
+    onChange(items.filter((f) => f.id !== id))
+  }
+
+  const updateField = (id, patch) => {
+    onChange(items.map((f) => (f.id === id ? { ...f, ...patch } : f)))
+  }
+
+  return (
+    <div className="pt-1">
+      {items.length > 0 && (
+        <div className="space-y-4 mb-4">
+          {items.map((f) => (
+            <div
+              key={f.id}
+              className="rounded-lg border border-dashed border-border bg-secondary/30 p-4"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                  Custom field
+                </span>
+                <button
+                  type="button"
+                  onClick={() => removeField(f.id)}
+                  className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-destructive transition"
+                  aria-label="Remove custom field"
+                >
+                  <Trash2 className="h-3.5 w-3.5" /> Remove
+                </button>
+              </div>
+              <div className="mt-3 space-y-3">
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">Field name</Label>
+                  <Input
+                    value={f.label}
+                    onChange={(e) => updateField(f.id, { label: e.target.value })}
+                    placeholder="e.g. Manglik, Blood Group, Hobbies"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">Value</Label>
+                  <Input
+                    value={f.value}
+                    onChange={(e) => updateField(f.id, { value: e.target.value })}
+                    placeholder="Enter value"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {adding ? (
+        <div className="rounded-lg border border-dashed border-primary/40 bg-primary/5 p-4 space-y-3">
+          <div className="space-y-1.5">
+            <Label className="text-xs text-muted-foreground">Field name</Label>
+            <Input
+              autoFocus
+              value={label}
+              onChange={(e) => setLabel(e.target.value)}
+              placeholder="e.g. Manglik, Blood Group, Hobbies"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label className="text-xs text-muted-foreground">Value</Label>
+            <Input
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              placeholder="Enter value"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                  addField()
+                }
+              }}
+            />
+          </div>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={addField}
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition"
+            >
+              Add field
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setAdding(false)
+                setLabel('')
+                setValue('')
+              }}
+              className="inline-flex items-center rounded-md border border-border bg-background px-4 py-2 text-xs font-medium hover:bg-secondary transition"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setAdding(true)}
+          className="inline-flex items-center gap-2 rounded-md border border-dashed border-border bg-background px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5 transition w-full sm:w-auto justify-center"
+        >
+          <Plus className="h-4 w-4" /> Add custom field to {sectionLabel}
+        </button>
+      )}
+    </div>
   )
 }
 
@@ -155,11 +293,11 @@ export default function GeneratorPage() {
           <h1 className="mt-3 font-serif text-4xl md:text-5xl tracking-tight">Tell us about you</h1>
           <p className="mt-3 text-muted-foreground max-w-2xl leading-relaxed">
             Fill in the details below. Required fields are marked with an asterisk (
-            <span className="text-destructive">*</span>). Your information is saved automatically as you type.
+            <span className="text-destructive">*</span>). You can also add your own custom fields in any section.
           </p>
         </section>
 
-        <form onSubmit={handleSubmit} className="container-narrow pb-24 space-y-8" noValidate>
+        <form onSubmit={handleSubmit} className="container-narrow pb-24 space-y-8 max-w-2xl" noValidate>
           {/* SECTION 1 — PERSONAL */}
           <Section
             icon={User}
@@ -167,45 +305,29 @@ export default function GeneratorPage() {
             title="Personal Details"
             description="Basic information about you."
           >
-            {/* Full Name */}
-            <div className="sm:col-span-2 space-y-2">
+            <div className="space-y-2">
               <FieldLabel htmlFor="fullName" required>Full Name</FieldLabel>
-              <Input
-                id="fullName"
-                value={data.fullName}
-                onChange={set('fullName')}
-                placeholder="e.g. Aarav Sharma"
-                aria-invalid={!!errors.fullName}
-              />
+              <Input id="fullName" value={data.fullName} onChange={set('fullName')} placeholder="e.g. Aarav Sharma" aria-invalid={!!errors.fullName} />
               {errors.fullName && <p className="text-xs text-destructive">{errors.fullName}</p>}
             </div>
 
-            {/* DOB */}
             <div className="space-y-2">
               <FieldLabel htmlFor="dob" required>Date of Birth</FieldLabel>
               <Input id="dob" type="date" value={data.dob} onChange={set('dob')} aria-invalid={!!errors.dob} />
               {errors.dob && <p className="text-xs text-destructive">{errors.dob}</p>}
             </div>
 
-            {/* Time of Birth */}
             <div className="space-y-2">
               <FieldLabel htmlFor="timeOfBirth" optional>Time of Birth</FieldLabel>
               <Input id="timeOfBirth" type="time" value={data.timeOfBirth} onChange={set('timeOfBirth')} />
             </div>
 
-            {/* Place of Birth */}
-            <div className="sm:col-span-2 space-y-2">
+            <div className="space-y-2">
               <FieldLabel htmlFor="placeOfBirth" optional>Place of Birth</FieldLabel>
-              <Input
-                id="placeOfBirth"
-                value={data.placeOfBirth}
-                onChange={set('placeOfBirth')}
-                placeholder="City, State"
-              />
+              <Input id="placeOfBirth" value={data.placeOfBirth} onChange={set('placeOfBirth')} placeholder="City, State" />
             </div>
 
-            {/* Gender */}
-            <div className="sm:col-span-2 space-y-2">
+            <div className="space-y-2">
               <FieldLabel required>Gender</FieldLabel>
               <RadioGroup
                 value={data.gender}
@@ -231,20 +353,12 @@ export default function GeneratorPage() {
               {errors.gender && <p className="text-xs text-destructive">{errors.gender}</p>}
             </div>
 
-            {/* Height */}
             <div className="space-y-2">
               <FieldLabel htmlFor="height" required>Height</FieldLabel>
-              <Input
-                id="height"
-                value={data.height}
-                onChange={set('height')}
-                placeholder={"e.g. 5'8\" or 173 cm"}
-                aria-invalid={!!errors.height}
-              />
+              <Input id="height" value={data.height} onChange={set('height')} placeholder={"e.g. 5'8\" or 173 cm"} aria-invalid={!!errors.height} />
               {errors.height && <p className="text-xs text-destructive">{errors.height}</p>}
             </div>
 
-            {/* Religion */}
             <div className="space-y-2">
               <FieldLabel htmlFor="religion" required>Religion</FieldLabel>
               <Select value={data.religion} onValueChange={(v) => set('religion')(v)}>
@@ -252,28 +366,18 @@ export default function GeneratorPage() {
                   <SelectValue placeholder="Select religion" />
                 </SelectTrigger>
                 <SelectContent>
-                  {religions.map((r) => (
-                    <SelectItem key={r} value={r}>{r}</SelectItem>
-                  ))}
+                  {religions.map((r) => (<SelectItem key={r} value={r}>{r}</SelectItem>))}
                 </SelectContent>
               </Select>
               {errors.religion && <p className="text-xs text-destructive">{errors.religion}</p>}
             </div>
 
-            {/* Caste */}
             <div className="space-y-2">
               <FieldLabel htmlFor="caste" required>Caste / Community</FieldLabel>
-              <Input
-                id="caste"
-                value={data.caste}
-                onChange={set('caste')}
-                placeholder="e.g. Brahmin, Sunni, Catholic"
-                aria-invalid={!!errors.caste}
-              />
+              <Input id="caste" value={data.caste} onChange={set('caste')} placeholder="e.g. Brahmin, Sunni, Catholic" aria-invalid={!!errors.caste} />
               {errors.caste && <p className="text-xs text-destructive">{errors.caste}</p>}
             </div>
 
-            {/* Rashi */}
             <div className="space-y-2">
               <FieldLabel htmlFor="rashi" required>Rashi</FieldLabel>
               <Select value={data.rashi} onValueChange={(v) => set('rashi')(v)}>
@@ -281,63 +385,40 @@ export default function GeneratorPage() {
                   <SelectValue placeholder="Select rashi" />
                 </SelectTrigger>
                 <SelectContent>
-                  {rashis.map((r) => (
-                    <SelectItem key={r} value={r}>{r}</SelectItem>
-                  ))}
+                  {rashis.map((r) => (<SelectItem key={r} value={r}>{r}</SelectItem>))}
                 </SelectContent>
               </Select>
               {errors.rashi && <p className="text-xs text-destructive">{errors.rashi}</p>}
             </div>
 
-            {/* Nakshatra */}
             <div className="space-y-2">
               <FieldLabel htmlFor="nakshatra" optional>Nakshatra</FieldLabel>
-              <Input
-                id="nakshatra"
-                value={data.nakshatra}
-                onChange={set('nakshatra')}
-                placeholder="e.g. Rohini"
-              />
+              <Input id="nakshatra" value={data.nakshatra} onChange={set('nakshatra')} placeholder="e.g. Rohini" />
             </div>
 
-            {/* Education */}
-            <div className="sm:col-span-2 space-y-2">
+            <div className="space-y-2">
               <FieldLabel htmlFor="education" required>Education</FieldLabel>
-              <Input
-                id="education"
-                value={data.education}
-                onChange={set('education')}
-                placeholder="e.g. M.Tech, IIT Bombay"
-                aria-invalid={!!errors.education}
-              />
+              <Input id="education" value={data.education} onChange={set('education')} placeholder="e.g. M.Tech, IIT Bombay" aria-invalid={!!errors.education} />
               {errors.education && <p className="text-xs text-destructive">{errors.education}</p>}
             </div>
 
-            {/* Profession */}
             <div className="space-y-2">
               <FieldLabel htmlFor="profession" required>Profession</FieldLabel>
-              <Input
-                id="profession"
-                value={data.profession}
-                onChange={set('profession')}
-                placeholder="e.g. Software Engineer"
-                aria-invalid={!!errors.profession}
-              />
+              <Input id="profession" value={data.profession} onChange={set('profession')} placeholder="e.g. Software Engineer" aria-invalid={!!errors.profession} />
               {errors.profession && <p className="text-xs text-destructive">{errors.profession}</p>}
             </div>
 
-            {/* Income */}
             <div className="space-y-2">
               <FieldLabel htmlFor="income" required>Annual Income</FieldLabel>
-              <Input
-                id="income"
-                value={data.income}
-                onChange={set('income')}
-                placeholder="e.g. ₹15 LPA"
-                aria-invalid={!!errors.income}
-              />
+              <Input id="income" value={data.income} onChange={set('income')} placeholder="e.g. ₹15 LPA" aria-invalid={!!errors.income} />
               {errors.income && <p className="text-xs text-destructive">{errors.income}</p>}
             </div>
+
+            <CustomFieldsBlock
+              items={data.customPersonal || []}
+              onChange={(next) => update({ customPersonal: next })}
+              sectionLabel="Personal Details"
+            />
           </Section>
 
           {/* SECTION 2 — FAMILY */}
@@ -383,11 +464,17 @@ export default function GeneratorPage() {
               {errors.sisters && <p className="text-xs text-destructive">{errors.sisters}</p>}
             </div>
 
-            <div className="sm:col-span-2 space-y-2">
+            <div className="space-y-2">
               <FieldLabel htmlFor="familyLocation" required>Family Location</FieldLabel>
               <Input id="familyLocation" value={data.familyLocation} onChange={set('familyLocation')} placeholder="e.g. Pune, Maharashtra" aria-invalid={!!errors.familyLocation} />
               {errors.familyLocation && <p className="text-xs text-destructive">{errors.familyLocation}</p>}
             </div>
+
+            <CustomFieldsBlock
+              items={data.customFamily || []}
+              onChange={(next) => update({ customFamily: next })}
+              sectionLabel="Family Details"
+            />
           </Section>
 
           {/* SECTION 3 — CONTACT */}
@@ -409,26 +496,19 @@ export default function GeneratorPage() {
               {errors.phone && <p className="text-xs text-destructive">{errors.phone}</p>}
             </div>
 
-            <div className="sm:col-span-2 space-y-2">
+            <div className="space-y-2">
               <FieldLabel htmlFor="email" required>Email</FieldLabel>
               <Input id="email" type="email" value={data.email} onChange={set('email')} placeholder="e.g. aarav@example.com" aria-invalid={!!errors.email} />
               {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
             </div>
 
-            <div className="sm:col-span-2 space-y-2">
+            <div className="space-y-2">
               <FieldLabel htmlFor="address" required>Address</FieldLabel>
-              <Textarea
-                id="address"
-                value={data.address}
-                onChange={set('address')}
-                placeholder="Full residential address"
-                rows={3}
-                aria-invalid={!!errors.address}
-              />
+              <Textarea id="address" value={data.address} onChange={set('address')} placeholder="Full residential address" rows={3} aria-invalid={!!errors.address} />
               {errors.address && <p className="text-xs text-destructive">{errors.address}</p>}
             </div>
 
-            <div className="sm:col-span-2 space-y-2">
+            <div className="space-y-2">
               <FieldLabel htmlFor="aboutMe" optional>
                 <span className="flex items-center gap-1.5"><Sparkles className="h-3.5 w-3.5 text-primary" /> About Me</span>
               </FieldLabel>
@@ -441,6 +521,12 @@ export default function GeneratorPage() {
               />
               <p className="text-xs text-muted-foreground">A gentle personal note goes a long way. Keep it honest and warm.</p>
             </div>
+
+            <CustomFieldsBlock
+              items={data.customContact || []}
+              onChange={(next) => update({ customContact: next })}
+              sectionLabel="Contact Details"
+            />
           </Section>
 
           {/* Autosave note + Submit */}

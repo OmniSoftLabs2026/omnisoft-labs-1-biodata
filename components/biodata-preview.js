@@ -110,7 +110,7 @@ function Page({ children, style, className = '' }) {
   return (
     <div
       className={`mx-auto w-full shadow-sm ${className}`}
-      style={{ maxWidth: '640px', minHeight: '860px', ...style }}
+      style={{ maxWidth: '595px', minHeight: '842px', ...style }}
     >
       {children}
     </div>

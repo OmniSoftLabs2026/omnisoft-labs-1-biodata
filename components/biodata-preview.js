@@ -97,11 +97,11 @@ function buildView(data) {
   const contact = data.contact || []
 
   return {
-    allRows: [
-      ...rows(personal, []),
-      ...rows(family, []),
-      ...rows(contact, ['aboutMe']),
-    ],
+    sections: [
+      { title: 'Personal Details', items: rows(personal, []) },
+      { title: 'Family Details', items: rows(family, []) },
+      { title: 'Contact Details', items: rows(contact, []) },
+    ].filter((s) => s.items.length > 0),
   }
 }
 
@@ -215,8 +215,18 @@ export default function BiodataPreview({ data, design = 'Ivory Cream' }) {
           {d.flourish && <Flourish color={d.rule} />}
           {!d.flourish && <div className="mt-2 mx-auto h-[1.5px] w-24" style={{ background: d.rule, opacity: 0.6 }} />}
 
-          <div className="mt-7">
-            <Rows items={v.allRows} color={d.ink} />
+          <div className="mt-7 space-y-7">
+            {v.sections.map((s) => (
+              <div key={s.title}>
+                <h2 className="text-[13px] font-bold uppercase tracking-[0.22em]" style={{ color: d.heading }}>
+                  {s.title}
+                </h2>
+                <div className="mt-1.5 h-[1px] w-full" style={{ background: d.rule, opacity: 0.5 }} />
+                <div className="mt-3">
+                  <Rows items={s.items} color={d.ink} />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </Frame>

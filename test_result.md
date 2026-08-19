@@ -98,6 +98,62 @@
 
 
 
+
+user_problem_statement: "Marriage biodata generator with Razorpay payment integration, PDF download after verified payment"
+
+backend:
+  - task: "Razorpay order creation API"
+    implemented: true
+    working: "NA"
+    file: "app/api/payments/order/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created POST /api/payments/order - creates Razorpay order with amount 4900 paise (₹49), stores in MongoDB"
+
+  - task: "Razorpay payment verification API"
+    implemented: true
+    working: "NA"
+    file: "app/api/payments/verify/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created POST /api/payments/verify - verifies HMAC-SHA256 signature, marks order as paid, returns downloadToken"
+
+  - task: "Download token check API"
+    implemented: true
+    working: "NA"
+    file: "app/api/payments/check/route.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created POST /api/payments/check - validates downloadToken against paid orders in MongoDB"
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus: "Backend payment API testing"
+  stuck_tasks: []
+  test_all: true
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Implemented Razorpay payment integration with 3 API endpoints. Order creation tested manually via curl - works. Need to test all endpoints including: (1) POST /api/payments/order with valid/missing template, (2) POST /api/payments/verify with valid/invalid/missing signature data, (3) POST /api/payments/check with valid/invalid token. Server runs on localhost:3000. MongoDB is at localhost:27017, DB name is 'biodatacraft'. Razorpay test keys are configured."
+
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
